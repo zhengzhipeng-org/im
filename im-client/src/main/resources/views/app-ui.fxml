@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.Pane?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="225.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.zhengzhipeng.client.controller.UserListController">
+   <children>
+      <ListView fx:id="users" layoutX="13.0" layoutY="14.0" prefHeight="476.0" prefWidth="200.0" />
+   </children>
+</Pane>
