@@ -31,6 +31,7 @@ public class UserListController extends BaseController implements Connection.Mes
     public void onReceive(Message message) {
         if ("server".equals(message.getFrom())) {
             Set set = JSON.parseObject(message.getContent(), Set.class);
+            list.clear();
             list.addAll(set);
             users.setItems(list);
         }

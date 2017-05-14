@@ -6,6 +6,8 @@ import org.zhengzhipeng.common.Login;
 import org.zhengzhipeng.common.Message;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -18,9 +20,9 @@ public class LoginListener implements Connection.MessageListener {
 
     private ConnectionManager manager;
     private Connection connection;
-    private ChartListener dispatcher;
+    private ChatListener dispatcher;
 
-    public LoginListener(ConnectionManager manager, Connection connection, ChartListener dispatcher) {
+    public LoginListener(ConnectionManager manager, Connection connection, ChatListener dispatcher) {
         this.manager = manager;
         this.connection = connection;
         this.dispatcher = dispatcher;
@@ -47,22 +49,27 @@ public class LoginListener implements Connection.MessageListener {
                 connection.addMessageListener(dispatcher);
                 connection.removeMessageListener(this);
 
-                // 发送当前在线用户到客户端
-                Message userDataResp = new Message();
-                userDataResp.setType(USER_LIST);
-                userDataResp.setFrom("server");
-                userDataResp.setTo(message.getFrom());
-                userDataResp.setContent("");
-                // 用户列表
-                if (manager != null) {
+                // 推送当前在线用户到每个客户端
+                Map<String, Connection> connections = manager.getConnections();
+                Iterator<Map.Entry<String, Connection>> iterator = connections.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry<String, Connection> next = iterator.next();
+                    String client = next.getKey();
+                    Connection connection = next.getValue();
+
+                    Message userDataResp = new Message();
+                    userDataResp.setType(USER_LIST);
+                    userDataResp.setFrom("server");
+                    userDataResp.setTo(client);
+                    // 用户列表
                     Set<String> users = manager.getAllConnectionKey();
                     userDataResp.setContent(JSON.toJSONString(users));
-                }
-                try {
-                    connection.sendMessage(userDataResp);
-                } catch (IOException e) {
-                    System.out.println("发送用户列表响应消息失败");
-                    e.printStackTrace();
+                    try {
+                        connection.sendMessage(userDataResp);
+                    } catch (IOException e) {
+                        System.out.println("发送用户列表响应消息失败");
+                        e.printStackTrace();
+                    }
                 }
                 return;
             }

@@ -11,11 +11,11 @@ import java.io.IOException;
  * @author zhengzhipeng
  * @since 2017/5/11
  */
-public class ChartListener implements Connection.MessageListener {
+public class ChatListener implements Connection.MessageListener {
 
     private ConnectionManager manager;
 
-    public ChartListener(ConnectionManager manager) {
+    public ChatListener(ConnectionManager manager) {
         this.manager = manager;
     }
 
@@ -36,7 +36,7 @@ public class ChartListener implements Connection.MessageListener {
 
     @Override
     public int getType() {
-        return CHART;
+        return CHAT;
     }
 
 }

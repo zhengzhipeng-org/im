@@ -29,4 +29,8 @@ public class ConnectionManager {
     public Set<String> getAllConnectionKey() {
         return connections.keySet();
     }
+
+    public Map<String, Connection> getConnections() {
+        return connections;
+    }
 }

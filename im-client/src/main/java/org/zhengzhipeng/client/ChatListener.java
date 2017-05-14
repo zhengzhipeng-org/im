@@ -9,7 +9,7 @@ import org.zhengzhipeng.common.Message;
  * @author zhengzhipeng
  * @since 2017/5/11
  */
-public class ChartListener implements Connection.MessageListener{
+public class ChatListener implements Connection.MessageListener{
 
     @Override
     public void onReceive(Message message) {
@@ -18,6 +18,6 @@ public class ChartListener implements Connection.MessageListener{
 
     @Override
     public int getType() {
-        return CHART;
+        return CHAT;
     }
 }

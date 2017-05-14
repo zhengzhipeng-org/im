@@ -61,14 +61,16 @@ public class Connection implements Runnable{
     @Override
     public void run() {
         while (!close) {
+            Message msg = null;
+            try {
+                msg = JSON.parseObject(is.readUTF(), Message.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             for (MessageListener listener : listeners) {
-                try {
-                    Message msg = JSON.parseObject(is.readUTF(), Message.class);
-                    if (listener.getType() == msg.getType()) {
-                        listener.onReceive(msg);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (listener.getType() == msg.getType()) {
+                    listener.onReceive(msg);
+                    break;
                 }
             }
         }
@@ -86,10 +88,12 @@ public class Connection implements Runnable{
         // 登陆
         int LOGIN = 1;
         // 聊天
-        int CHART = 2;
+        int CHAT = 2;
         // 用户列表
         int USER_LIST = 3;
+
         void onReceive(Message message);
+
         int getType();
     }
 }
