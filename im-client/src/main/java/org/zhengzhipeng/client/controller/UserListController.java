@@ -2,6 +2,7 @@ package org.zhengzhipeng.client.controller;
 
 import com.alibaba.fastjson.JSON;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,31 @@ public class UserListController extends BaseController implements Connection.Mes
 
     public ListView<String> users = new ListView<>();
     ObservableList<String> list = FXCollections.observableArrayList();
+    private boolean isAdd = false;
+    private Pane pane;
+
+    public Pane getPane() {
+        return pane;
+    }
+
+    public void setPane(Pane pane) {
+        this.pane = pane;
+    }
+
+    public void addClickEvent() {
+        if (!isAdd) {
+            // 绑定点击事件 弹出聊天窗口
+            users.getSelectionModel().selectedItemProperty().addListener(
+                    (ObservableValue<? extends String> observable, String oldValue, String newValue) ->{
+                        Stage stage = new Stage();
+                        Platform.runLater(() -> {
+                            stage.setScene(new Scene(getPane()));
+                            stage.show();
+                        });
+                    });
+            isAdd = true;
+        }
+    }
 
     @Override
     public void onReceive(Message message) {
@@ -34,6 +60,7 @@ public class UserListController extends BaseController implements Connection.Mes
             list.clear();
             list.addAll(set);
             users.setItems(list);
+            addClickEvent();
         }
     }
 

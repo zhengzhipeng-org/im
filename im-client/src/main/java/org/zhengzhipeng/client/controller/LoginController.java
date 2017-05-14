@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import org.zhengzhipeng.common.Connection;
 import org.zhengzhipeng.common.Login;
 import org.zhengzhipeng.common.Message;
-import org.zhengzhipeng.common.Response;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,20 +25,37 @@ public class LoginController extends BaseController implements Connection.Messag
 
     public TextField username;
     public PasswordField password;
-    public Pane userList;
+    public Pane pane;
 
     public void login() throws IOException {
         // 与服务器建立连接
         Connection connection = new Connection("127.0.0.1", 10086);
         connection.addMessageListener(this);
-        if (userList == null) {
+        if (pane == null) {
+            // chat
+            URL res = getClass().getClassLoader().getResource("views/chat.fxml");
+            if (res == null) {
+                throw new IllegalStateException("views/chat.fxml 文件找不到。");
+            }
+            FXMLLoader load = new FXMLLoader(res);
+            Pane chatPane = null;
+            try {
+                chatPane = load.load();
+                ChatController chatController = load.getController();
+                connection.addMessageListener(chatController);
+                chatController.setConnection(connection);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // user list
             URL resource = getClass().getClassLoader().getResource("views/app-ui.fxml");
             if (resource == null) {
-                System.out.println("views/app-ui.fxml 文件找不到。");
+                throw new IllegalStateException("views/app-ui.fxml 文件找不到。");
             }
             FXMLLoader loader = new FXMLLoader(resource);
-            userList = loader.load();
+            pane = loader.load();
             UserListController controller = loader.getController();
+            controller.setPane(chatPane);
             connection.addMessageListener(controller);
         }
         new Thread(connection).start();
@@ -55,7 +71,7 @@ public class LoginController extends BaseController implements Connection.Messag
             if ("ok".equals(message.getContent())) {
                 System.out.println("登陆成功");
                 Stage stage = getStage();
-                Platform.runLater(() -> stage.setScene(new Scene(userList)));
+                Platform.runLater(() -> stage.setScene(new Scene(pane)));
             }
         }
     }
