@@ -5,8 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.zhengzhipeng.client.controller.LoginController;
+import org.zhengzhipeng.client.controller.BaseController;
 
 import java.io.FileNotFoundException;
 import java.net.URL;
@@ -21,15 +20,14 @@ public class LoginUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        URL resource = getClass().getClassLoader().getResource("views/login.fxml");
+        URL resource = getClass().getClassLoader().getResource(BaseController.LOGIN_PATH);
         if (resource == null) {
-            throw new FileNotFoundException("views/login.fxml");
+            throw new FileNotFoundException(BaseController.LOGIN_PATH);
         }
         FXMLLoader loader = new FXMLLoader(resource);
         Pane root = loader.load();
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-        LoginController controller = loader.getController();
-        controller.setStage(primaryStage);
+        BaseController.addPrimaryStage(primaryStage);
     }
 }

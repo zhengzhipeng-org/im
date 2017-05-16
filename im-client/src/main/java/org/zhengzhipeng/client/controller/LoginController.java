@@ -25,36 +25,31 @@ public class LoginController extends BaseController implements Connection.Messag
 
     public TextField username;
     public PasswordField password;
+    // 用户列表 pane
     public Pane pane;
 
     public void login() throws IOException {
         // 与服务器建立连接
-        Connection connection = new Connection("127.0.0.1", 10086);
+        connection = new Connection("127.0.0.1", 10086);
         connection.addMessageListener(this);
         if (pane == null) {
             // chat
-            URL res = getClass().getClassLoader().getResource("views/chat.fxml");
-            if (res == null) {
-                throw new IllegalStateException("views/chat.fxml 文件找不到。");
-            }
-            FXMLLoader load = new FXMLLoader(res);
+            FXMLLoader load = getLoader(CHAT_PATH);
             Pane chatPane = null;
             try {
                 chatPane = load.load();
-                ChatController chatController = load.getController();
-                connection.addMessageListener(chatController);
-                chatController.setConnection(connection);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            ChatController chatController = load.getController();
+            chatController.setPane(chatPane);
+            connection.addMessageListener(chatController);
+
             // user list
-            URL resource = getClass().getClassLoader().getResource("views/app-ui.fxml");
-            if (resource == null) {
-                throw new IllegalStateException("views/app-ui.fxml 文件找不到。");
-            }
-            FXMLLoader loader = new FXMLLoader(resource);
+            FXMLLoader loader = getLoader(APP_UI_PATH);
             pane = loader.load();
             UserListController controller = loader.getController();
+            controller.setChatController(chatController);
             controller.setPane(chatPane);
             connection.addMessageListener(controller);
         }
@@ -70,8 +65,12 @@ public class LoginController extends BaseController implements Connection.Messag
         if ("server".equals(message.getFrom())) {
             if ("ok".equals(message.getContent())) {
                 System.out.println("登陆成功");
-                Stage stage = getStage();
-                Platform.runLater(() -> stage.setScene(new Scene(pane)));
+                currentUser = message.getTo();
+                Stage stage = getPrimaryStage();
+                Platform.runLater(() -> {
+                    stage.setTitle(currentUser);
+                    stage.setScene(new Scene(pane));
+                });
             }
         }
     }
