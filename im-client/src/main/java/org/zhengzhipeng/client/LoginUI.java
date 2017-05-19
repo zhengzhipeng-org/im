@@ -28,6 +28,6 @@ public class LoginUI extends Application {
         Pane root = loader.load();
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-        BaseController.addPrimaryStage(primaryStage);
+        BaseController.primaryStage = primaryStage;
     }
 }

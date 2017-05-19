@@ -37,7 +37,7 @@ public class LoginListener implements Connection.MessageListener {
         if (message.getTo().equals("server")) {
             Login login = JSON.parseObject(message.getContent(), Login.class);
             if ("admin".equals(login.getUsername()) || "zzp".equals(login.getUsername()) ||
-                    "cy".equals(login.getUsername())) {
+                    "cy".equals(login.getUsername()) || "ywj".equals(login.getUsername())) {
                 try {
                     response.setContent("ok");
                     connection.sendMessage(response);
