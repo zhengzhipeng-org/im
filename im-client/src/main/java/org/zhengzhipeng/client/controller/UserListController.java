@@ -21,9 +21,20 @@ import org.zhengzhipeng.client.FXMLObj;
  */
 public class UserListController extends BaseController{
 
-    private FXMLObj fxmlObj;
+    @FXML
+    private ListView<String> users = new ListView<>();
+    @FXML
+    private ObservableList<String> list = FXCollections.observableArrayList();
 
-    public UserListController() {
+    public ObservableList<String> getList() {
+        return list;
+    }
+
+    public ListView<String> getUsers() {
+        return users;
+    }
+
+    public void addEventClick() {
         // 绑定点击事件 弹出聊天窗口
         users.getSelectionModel().selectedItemProperty().addListener(
                 (ObservableValue<? extends String> observable, String oldValue, String newValue) ->{
@@ -47,18 +58,4 @@ public class UserListController extends BaseController{
                     }
                 });
     }
-
-    @FXML
-    private ListView<String> users = new ListView<>();
-    @FXML
-    private ObservableList<String> list = FXCollections.observableArrayList();
-
-    public ObservableList<String> getList() {
-        return list;
-    }
-
-    public ListView<String> getUsers() {
-        return users;
-    }
-
 }

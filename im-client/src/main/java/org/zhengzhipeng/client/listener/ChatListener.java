@@ -39,11 +39,15 @@ public class ChatListener implements Connection.MessageListener {
                 chat[0].setStage(stage);
                 chat[0].setController(controller);
                 BaseController.addChat(from, chat[0]);
+                controller.showMessage(from, msg.getContent());
+            });
+        } else {
+            Platform.runLater(() -> {
+                Chat ch = chat[0];
+                ChatController controller = ch.getController();
+                controller.showMessage(from, msg.getContent());
             });
         }
-        Chat ch = chat[0];
-        ChatController controller = ch.getController();
-        controller.showMessage(from, msg.getContent());
     }
 
     @Override

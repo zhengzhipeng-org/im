@@ -26,6 +26,7 @@ public class UserListListener implements Connection.MessageListener{
 
     private FXMLObj<UserListController> fxmlObj;
     private boolean isLaunch = false;
+
     @Override
     public void onReceive(Message message) {
         if ("server".equals(message.getFrom())) {
@@ -46,6 +47,7 @@ public class UserListListener implements Connection.MessageListener{
 
             if (!isLaunch) {
                 isLaunch = true;
+                controller.addEventClick();
                 Platform.runLater(() -> {
                     stage.setTitle(message.getTo());
                     stage.setScene(new Scene(fxmlObj.getPane()));
